@@ -6,7 +6,6 @@ const path = require("path");
 const glob = require("glob");
 const gherkin = require("gherkin");
 const escapeHtml = require("escape-html");
-const colours = require("colors");
 const jsdom = require("jsdom");
 const shell = require("shelljs");
 
@@ -19,6 +18,7 @@ const TITLE = args.title;
 const DATE = args.date;
 const NOTES = args.notes;
 const EXCLUDE_TAGS = args.exclude;
+const INCLUDE_TAGS = args.include;
 const OUTPUT_DIRECTORY = path.resolve("pumpkin", ".");
 const OUTPUT_FILE = path.resolve(`${OUTPUT_DIRECTORY}/report.html`, ".");
 const STATUS_TYPES = ["Not run", "Descoped", "In Progress", "Passed", "Failed", "Blocked"];
@@ -82,6 +82,15 @@ function loadFeatureFiles() {
       );
       return f.feature;
     });
+}
+
+function isIncludedByTag(tags) {
+  if (!INCLUDE_TAGS) return;
+
+  const filteredTags = tags
+    .map(tag => tag.name)
+    .filter(tag => INCLUDE_TAGS.split(" ").includes(tag))
+  return filteredTags.length > 0;
 }
 
 function isExcludedByTag(tags) {
@@ -201,7 +210,16 @@ function formatSteps(scenario) {
 function formatScenarios(featureName, items) {
   let html = "";
   items.forEach((scenario, i) => {
-    if (isExcludedByTag(scenario.tags)) {
+    if (INCLUDE_TAGS) {
+      if (isIncludedByTag(scenario.tags)) {
+        printMessage(`- Including scenario '${scenario.name}' based on tag`);
+      }
+      else {
+        printMessage(`- Excluding scenario '${scenario.name}' based on tag`);
+        return;
+      }
+    }
+    else if (isExcludedByTag(scenario.tags)) {
       printMessage(`- Excluding scenario '${scenario.name}' based on tag`);
       return;
     }
@@ -275,6 +293,7 @@ featureFiles.forEach(featureFile => {
     printMessage(`- Excluding feature '${featureFile.name}' based on tag`);
     return;
   }
+
   report += `<div class='feature'>
     <div class='feature-header'>
       <div class='float-left'>

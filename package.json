@@ -21,7 +21,6 @@
     "bdd"
   ],
   "dependencies": {
-    "colors": "^1.4.0",
     "escape-html": "^1.0.3",
     "gherkin": "^5.0.0",
     "glob": "^7.1.6",

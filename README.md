@@ -22,6 +22,7 @@ The script accepts the following arguments:
 - `--date` to set the report date/time
 - `--notes` to set the report notes
 - `--exclude` a space-separated list of tags to exclude e.g. "@wip @regression"
+- `--include` a space-separated list of tags to include e.g. "@wip @regression". When include tags are defined, exclude tags are ignored
 
 ### Saving your results
 
