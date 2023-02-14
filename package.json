@@ -1,6 +1,6 @@
 {
   "name": "@lakitna/pumpkin",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "Generate a test report directly from gherkin feature files. Cucumber and manual tests in blissful harmony.",
   "main": "index.js",
   "scripts": {
